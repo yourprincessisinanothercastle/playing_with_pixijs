@@ -1,0 +1,24 @@
+const LEFT = 'left';
+const RIGHT = 'right';
+const UP = 'up';
+const DOWN = 'down';
+
+const DIRECTIONS = {
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN
+};
+
+const WALKING = 'walking';
+const SITTING = 'sitting';
+
+const STATES = {
+    WALKING,
+    SITTING
+};
+
+export default {
+    DIRECTIONS, 
+    STATES
+};
