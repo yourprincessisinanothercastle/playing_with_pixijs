@@ -10,17 +10,22 @@ export default class Kero extends SpriteBase {
     this.states = {
       [c.STATES.WALKING]: {
         [c.DIRECTIONS.LEFT]: {
-          images: [22, 23, 24],
-          speed: 10
+          images:[22, 23, 24],
+          speed: 50
         },
         [c.DIRECTIONS.UP]: {
           images: [42, 43, 44],
-          speed: 10
+          speed: 50
         },
         [c.DIRECTIONS.DOWN]: {
           images: [19, 20, 21],
-          speed: 10
-        }
+          speed: 50
+        },
+        [c.DIRECTIONS.RIGHT]: {
+            images: [22, 23, 24],
+            speed: 50,
+            flipped: true
+          },
       }
     };
 

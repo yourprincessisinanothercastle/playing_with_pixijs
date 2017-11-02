@@ -38,24 +38,17 @@ function setup() {
   };
 
   let gloop = new GameLoop(renderer);
-
-  // :P
-  gloop.update();
-  gloop.update();
-  gloop.update();
-  gloop.update();
-  gloop.update();
-  gloop.draw();
-  gloop.update();
-  gloop.draw();
-  gloop.update();
-  gloop.draw();
-  gloop.update();
-  gloop.draw();
-  gloop.update();
-  gloop.draw();
-  gloop.update();
-  gloop.draw();
+  gloop.start();
+  /*gloop.draw()
+  gloop.update(1, [true, false, false, false])
+  gloop.draw()
+  gloop.update(1, [false, true, false, false])
+  gloop.draw()
+  gloop.update(1, [false, false, true, false])
+  gloop.draw()
+  gloop.update(1, [false, false, false, true])
+  gloop.draw()
+*/
 }
 
 
