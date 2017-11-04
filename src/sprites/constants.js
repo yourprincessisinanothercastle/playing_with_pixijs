@@ -2,6 +2,7 @@ const LEFT = 'left';
 const RIGHT = 'right';
 const UP = 'up';
 const DOWN = 'down';
+const STILL = 'still';
 
 const DIRECTIONS = {
     LEFT,
@@ -15,7 +16,8 @@ const SITTING = 'sitting';
 
 const STATES = {
     WALKING,
-    SITTING
+    SITTING,
+    STILL,
 };
 
 export default {

@@ -114,7 +114,8 @@ export default class GameLoop {
     MainLoop.stop();
   }
 
-  update(delta, keys = false) {
+  update(delta, keys = false /*dev only*/) {
+    // todo: can we somehow leave this block out on prod-builds?
     if (keys.length === 4) {
         console.log(keys)
       this.kero.update(...keys);

@@ -44,54 +44,56 @@ export default class SpriteBase {
    * @param {*} right 
    */
   movement(up, down, left, right) {
-    let isMoving = 0;
     if (up && !down) {
       this._y -= this._vy;
       this.direction = c.DIRECTIONS.UP;
-      isMoving = 1;
+      this.state = c.STATES.WALKING;
     }
-    if (down && !up) {
+    else if (down && !up) {
       this._y += this._vy;
       this.direction = c.DIRECTIONS.DOWN;
-      isMoving = 1;
+      this.state = c.STATES.WALKING;
     }
-    if (left && !right) {
+    else if (left && !right) {
       this._x -= this._vx;
       this.direction = c.DIRECTIONS.LEFT;
-      isMoving = 1;
+      this.state = c.STATES.WALKING;
     }
-    if (right && !left) {
+    else if (right && !left) {
       this._x += this._vx;
       this.direction = c.DIRECTIONS.RIGHT;
-      isMoving = 1;
+      this.state = c.STATES.WALKING;
     }
-
-    this.animationTime += isMoving; // add to animationtime if moving
-    this.animationTime *= isMoving; // set to zero if not moving
-  }
-
-  updateSprite() {
-    this.onStage.texture = this.texture;
+    else {
+      this.state = c.STATES.STILL;
+    }
   }
 
   update(up, down, left, right) {
+    //console.log('update, state:', this.state)
     this._xLast = this._x;
     this._yLast = this._y;
     this.directionLast = this.direction;
+    this.stateLast = this.state;
+
+    this.animationTime += 1;
 
     // todo: collisions separate from movement
     this.movement(up, down, left, right);
-    this.updateSprite();
+    this.onStage.texture = this.texture;
+
+    if (this.state != this.stateLast) {
+      this.animationTime = 0;
+    }
   }
 
   draw(interpolationPercentage = 1) {
     this.interpolationPercentage = interpolationPercentage;
 
-    let x = this.drawnPosition[0];
-    let y = this.drawnPosition[1];
+    let [x, y] = this.drawnPosition;
 
-    this.onStage.x = parseInt(x)
-    this.onStage.y = parseInt(y)
+    this.onStage.x = parseInt(x);
+    this.onStage.y = parseInt(y);
   }
 
   get drawnPosition() {
@@ -120,12 +122,46 @@ export default class SpriteBase {
     return PIXI.loader.resources[this.id].textures;
   }
 
-  get texture() {
-    let animationLength = this.states[this.state][this.direction]['images'].length;
+  _getTextureForTimedAnimation() {
+    // animation where time for each image is specified
+
+    let times = this.states[this.state][this.direction]['times'].slice();
+
+    let animationLength = this.states[this.state][this.direction]['times'].reduce((a, b) => a + b, 0);
+    this.animationTime %= animationLength;
+
+    let currentFrame = times.shift();
+    let idx = 0;
+
+    while (currentFrame <= this.animationTime) {
+      currentFrame += times.shift();
+      idx += 1;
+    }
+
+    return this.states[this.state][this.direction]['images'][idx];
+  }
+
+  _getTextureForAnimationWithSpeed() {
+    let imageCount = this.states[this.state][this.direction]['images'].length;
     let speed = this.states[this.state][this.direction]['speed'];
-    let frame = parseInt((animationLength / speed) * (this.animationTime % speed));
-    let spriteindex = this.states[this.state][this.direction]['images'][frame];
-    let spriteId = this.prefix + '-' + spriteindex + '.png';
+    let frame = parseInt((imageCount / speed) * (this.animationTime % speed));
+    return this.states[this.state][this.direction]['images'][frame];
+  }
+
+  get texture() {
+
+    let spriteIndex;
+
+    if (this.states[this.state][this.direction]['times']) {
+      spriteIndex = this._getTextureForTimedAnimation();
+    } else if (this.states[this.state][this.direction]['speed']) {
+      spriteIndex = this._getTextureForAnimationWithSpeed();
+    } else {
+      spriteIndex = this.states[this.state][this.direction]['images'][0];
+    }
+
+    let spriteId = this.prefix + '-' + spriteIndex + '.png';
+
     // todo: we need onStage to set the initial scale
     try {
       if (this.states[this.state][this.direction]['flipped']) {

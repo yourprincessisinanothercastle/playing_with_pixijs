@@ -39,16 +39,10 @@ function setup() {
 
   let gloop = new GameLoop(renderer);
   gloop.start();
-  /*gloop.draw()
-  gloop.update(1, [true, false, false, false])
-  gloop.draw()
-  gloop.update(1, [false, true, false, false])
-  gloop.draw()
-  gloop.update(1, [false, false, true, false])
-  gloop.draw()
-  gloop.update(1, [false, false, false, true])
-  gloop.draw()
-*/
+  /*for (let i=0; i<100; i++){
+    gloop.draw()
+    gloop.update(1, [false, false, false, false])
+  }*/
 }
 
 
